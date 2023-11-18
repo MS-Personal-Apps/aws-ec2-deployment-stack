@@ -13,7 +13,6 @@ permissions:
 jobs:
   terraform-deploy:
     name: AWS-Services Deploy
-    # needs: [unit-test]
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
 
@@ -34,48 +33,6 @@ jobs:
           lambda-version: ${{ github.sha }}
           working-directory: ./terraform
 
-  node-deploy:
-    name: Node Deploy
-    runs-on: ubuntu-latest
-    # timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: 'Install dependencies'
-        uses: ./.github/actions/dependencies
-        with:
-          node-version: '18.x'
-
-      - name: Create App Directory on EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            mkdir -p /home/ubuntu/app
-            chown -R ubuntu:ubuntu /home/ubuntu/app
-            chmod -R 755 /home/ubuntu/app
-            
-      - name: Deploy to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "."  # Change this if your application files are in a different directory
-          target: "/home/ubuntu/app"  # Change this to the destination directory on your EC2 instance
-          overwrite: true
-
-      - name: SSH into EC2 and Restart Application
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/ubuntu/app
-            pm2 restart index.js 
 
 
  

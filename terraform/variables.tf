@@ -19,5 +19,5 @@ variable "instance_type" {
 }
 variable "key_pair_name" {
   type    = string
-  default = "test-terraform-github-deploy"
+  default = "aws-ec2-deployment-stack"
 }

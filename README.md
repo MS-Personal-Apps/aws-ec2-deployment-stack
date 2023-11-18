@@ -1,1 +1,1 @@
-# test-terraform-github-deploy
+# aws-ec2-deployment-stack

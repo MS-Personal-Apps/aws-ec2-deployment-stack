@@ -60,13 +60,13 @@ jobs:
       # matrix:
       #   include:
       #     - environment: development
-      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-development/bundles/test-terraform-github-deploy/development/${{ needs.semantic-release.outputs.version }}.zip
+      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-development/bundles/aws-ec2-deployment-stack/development/${{ needs.semantic-release.outputs.version }}.zip
       #       account: DEV_ACCOUNT_ID
       #     - environment: staging
-      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-staging/bundles/test-terraform-github-deploy/staging/${{ needs.semantic-release.outputs.version }}.zip
+      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-staging/bundles/aws-ec2-deployment-stack/staging/${{ needs.semantic-release.outputs.version }}.zip
       #       account: STAGING_ACCOUNT_ID
       #     - environment: production
-      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-production/bundles/test-terraform-github-deploy/production/${{ needs.semantic-release.outputs.version }}.zip
+      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-production/bundles/aws-ec2-deployment-stack/production/${{ needs.semantic-release.outputs.version }}.zip
       #       account: PRODUCTION_ACCOUNT_ID
     # name: Push package to the ${{ matrix.environment }} S3 bucket
     # needs: [semantic-release]

@@ -1,5 +1,5 @@
 {
-  "name": "test-terraform-github-deploy",
+  "name": "aws-ec2-deployment-stack",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com-personal:shanrijo/test-terraform-github-deploy.git"
+    "url": "git@github.com-personal:shanrijo/aws-ec2-deployment-stack.git"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

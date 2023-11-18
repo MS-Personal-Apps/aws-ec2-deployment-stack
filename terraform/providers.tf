@@ -16,7 +16,7 @@ provider "aws" {
   region  = var.region
   default_tags {
     tags = {
-      Repository_name = "test-terraform-github-deploy"
+      Repository_name = "aws-ec2-deployment-stack"
       Created_by      = "terraform"
       Environment     = title(terraform.workspace)
     }

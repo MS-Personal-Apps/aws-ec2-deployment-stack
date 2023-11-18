@@ -1,0 +1,24 @@
+name: 'Package and push to S3'
+description: 'Packages the lambda and pushes the zip to S3'
+
+inputs:
+  package-output:
+    required: true
+    default: '.serverless/test-terraform-github-deploy.zip'
+  s3-location:
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Package'
+      run: npx sls package
+      shell: bash
+
+    - name: 'Check package file exists'
+      run: test -f ${{ inputs.package-output }}
+      shell: bash
+
+    - name: 'Copy to S3'
+      run: aws s3 cp ${{ inputs.package-output }} ${{ inputs.s3-location }}
+      shell: bash

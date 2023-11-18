@@ -1,0 +1,35 @@
+name: Delete
+on:
+  pull_request:
+    types: [closed]
+env:
+  GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  delete:
+    name: Delete
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Assume AWS role'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::${{ secrets.DEV_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
+
+      # - name: 'Remove PR package zips'
+      #   run: aws s3 rm --recursive s3://serverless-deployments-alamy-eu-west-1-development/bundles/test-terraform-github-deploy/pr-${{ github.event.pull_request.number }}
+
+      - name: 'Remove the stack'
+        uses: ./.github/actions/terraform
+        with:
+          workspace: pr-${{ github.event.pull_request.number }}
+          action: destroy
+          working-directory: ./terraform

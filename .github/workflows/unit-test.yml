@@ -1,0 +1,41 @@
+name: Test
+on: [push]
+      
+env:
+  GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
+
+jobs:
+  test:
+    name: Test
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: 'Install dependencies'
+        uses: ./.github/actions/dependencies
+        with:
+          node-version: '18.x'
+      # - run: npm run lint
+      # - run: npm run test
+
+  terraform-test:
+    name: Terraform checks
+    # if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # - name: Run Checkov
+      #   uses: bridgecrewio/checkov-action@master
+      #   with:
+      #     directory: terraform/
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v2
+
+      - name: Run TFLint
+        run: tflint -f compact --chdir=terraform/

@@ -1,0 +1,28 @@
+name: "Install Node.js dependencies"
+description: "Installs dependencies from npm or cache"
+
+inputs:
+  node-version:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Setup node.js"
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+    
+    - name: "Cache node_modules"
+      uses: actions/cache@v3
+      id: modules
+      with:
+        path: |
+          node_modules
+          ~/.npm
+        key: ${{ runner.os }}-${{ inputs.node-version }}-modules-${{ hashFiles('**/package-lock.json') }}
+    
+    - name: "Install node_modules if not cached"
+      if: steps.modules.outputs.cache-hit != 'true'
+      run: npm ci
+      shell: bash

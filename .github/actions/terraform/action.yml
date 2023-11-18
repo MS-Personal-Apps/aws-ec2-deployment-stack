@@ -1,0 +1,59 @@
+name: 'Terraform steps for plan, deploy and destroy'
+description: 'Configures the backend and workspace for terraform before executing the plan, deploy, or destroy'
+
+inputs:
+  workspace:
+    description: 'The workspace to deploy to'
+    required: true
+  action:
+    description: 'The terraform action to perform from: plan, deploy, destroy'
+    required: true
+  working-directory:
+    description: 'The directory of the terraform stack'
+  lambda-version:
+    description: "The version to deploy e.g. 'v1.0.1' or the commit sha e.g. '50b8491e73a2e21b299eb09732d00fbc6a1231a2'"
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Determine environment from workspace'
+      run: echo "ENVIRONMENT=${{ inputs.workspace }}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: 'If PR workspace override ENVIRONMENT to development'
+      if: contains(inputs.workspace, 'PR-')
+      run: echo "ENVIRONMENT=development" >> $GITHUB_ENV
+      shell: bash
+
+    - name: 'Setup Terraform'
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: '>=1.0.0 <2.0.0'
+
+    - name: 'Configure the backend'
+      run: terraform init --backend-config=./backends/${ENVIRONMENT}.conf
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: 'Select the workspace'
+      run: terraform workspace select ${{ inputs.workspace }} || terraform workspace new ${{ inputs.workspace }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: 'Terraform plan'
+      if: ${{ inputs.action == 'plan' }}
+      run: terraform plan --var-file=./workspaces/${ENVIRONMENT}.tfvars --var="profile="'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: 'Terraform apply'
+      if: ${{ inputs.action == 'apply' }}
+      run: terraform apply --var-file=./workspaces/${ENVIRONMENT}.tfvars --var="profile=" --auto-approve
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: 'Terraform destroy'
+      if: ${{ inputs.action == 'destroy' }}
+      run: terraform destroy --var-file=./workspaces/${ENVIRONMENT}.tfvars --var="profile=" --auto-approve
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}

@@ -1,29 +1,4 @@
 
-# DATA
-# data "aws_ami" "aws_ubuntu" {
-#   most_recent = true
-#   owners      = ["amazon"]
-
-#   filter {
-#     name   = "name"
-#     values = ["amzn-ami-hvm*"]
-#   }
-
-#   filter {
-#     name   = "root-device-type"
-#     values = ["ebs"]
-#   }
-
-#   filter {
-#     name   = "virtualization-type"
-#     values = ["hvm"]
-#   }
-# }
-
-
-# RESOURCES
-# Ami
-
 resource "aws_instance" "aws_ubuntu" {
   instance_type = var.instance_type
   ami           = var.instance_ami
@@ -31,18 +6,20 @@ resource "aws_instance" "aws_ubuntu" {
   user_data     = file("configuration.tpl")
 }
 
-
-# Default VPC
-resource "aws_default_vpc" "default" {
-
+# Check if the security group already exists
+data "aws_security_group" "existing" {
+  name = var.security_group_name
 }
 
-# Security group
-resource "aws_security_group" "demo_sg" {
-  name        = "demo_sg"
-  description = "allow ssh on 22 & http on port 80"
-  vpc_id      = aws_default_vpc.default.id
+# Create the security group only if it doesn't exist
+resource "aws_security_group" "new" {
+  count = data.aws_security_group.existing.arn ? 0 : 1
 
+  name        = var.security_group_name
+  description = "My security group description"
+  # vpc_id      = var.vpc_id
+
+  // Ingress rules
   ingress {
     from_port   = 22
     to_port     = 22
@@ -50,24 +27,9 @@ resource "aws_security_group" "demo_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  // Add more ingress rules as needed
 }
 
-
-
-# OUTPUT
-output "aws_instance_public_dns" {
-  value = aws_instance.aws_ubuntu.public_dns
+output "security_group_id" {
+  value = aws_security_group.new.arn
 }

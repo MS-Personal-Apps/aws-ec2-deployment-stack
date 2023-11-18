@@ -19,5 +19,9 @@ variable "instance_type" {
 }
 variable "key_pair_name" {
   type    = string
-  default = "aws-ec2-deployment-stack"
+  default = "test-terraform-github-deploy"
+}
+variable "security_group_name" {
+  description = "Name of the security group"
+  default     = "demo_sg"
 }

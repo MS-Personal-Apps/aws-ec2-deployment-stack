@@ -7,8 +7,8 @@ on:
         required: true
         type: string
 
-# env:
-#   GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
+env:
+  GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
 
 permissions:
   id-token: write

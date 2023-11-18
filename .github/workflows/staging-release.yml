@@ -55,42 +55,9 @@ jobs:
           npx semantic-release
           echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
-  # push-artefact:
-  #   strategy:
-      # matrix:
-      #   include:
-      #     - environment: development
-      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-development/bundles/aws-ec2-deployment-stack/development/${{ needs.semantic-release.outputs.version }}.zip
-      #       account: DEV_ACCOUNT_ID
-      #     - environment: staging
-      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-staging/bundles/aws-ec2-deployment-stack/staging/${{ needs.semantic-release.outputs.version }}.zip
-      #       account: STAGING_ACCOUNT_ID
-      #     - environment: production
-      #       s3-location: s3://serverless-deployments-alamy-eu-west-1-production/bundles/aws-ec2-deployment-stack/production/${{ needs.semantic-release.outputs.version }}.zip
-      #       account: PRODUCTION_ACCOUNT_ID
-    # name: Push package to the ${{ matrix.environment }} S3 bucket
-    # needs: [semantic-release]
-    # runs-on: ubuntu-latest
-    # timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
-    # steps:
-    #   - uses: actions/checkout@v3
-    #   - name: 'Install dependencies'
-    #     uses: alamy-ops/github-actions/actions/install-node-dependencies@main
-    #     with:
-    #       node-version: '18.x'
-    #   - name: 'Assume AWS role'
-    #     uses: aws-actions/configure-aws-credentials@v1
-    #     with:
-    #       aws-region: eu-west-1
-    #       role-to-assume: arn:aws:iam::${{ secrets[matrix.account] }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
-    #   # - name: 'Package and push to the ${{ matrix.environment }} S3 bucket'
-    #   #   uses: ./.github/actions/package
-    #   #   with:
-    #   #     s3-location: ${{ matrix.s3-location }}
-
   deploy-development:
     name: Deploy Development
-    needs: [semantic-release, push-artefact]
+    needs: [semantic-release]
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
 
@@ -102,7 +69,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          # role-to-assume: arn:aws:iam::${{ secrets.DEV_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
+
       - name: 'Deploy the stack'
         uses: ./.github/actions/terraform
         with:
@@ -113,7 +80,7 @@ jobs:
 
   deploy-staging:
     name: Deploy Staging
-    needs: [semantic-release, push-artefact]
+    needs: [semantic-release]
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
 
@@ -125,7 +92,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          # role-to-assume: arn:aws:iam::${{ secrets.STAGING_ACCOUNT_ID }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
+
       - name: 'Deploy the stack'
         uses: ./.github/actions/terraform
         with:
@@ -136,7 +103,7 @@ jobs:
 
   plan-production:
     name: Plan production
-    needs: [semantic-release, push-artefact]
+    needs: [semantic-release]
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
 

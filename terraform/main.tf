@@ -6,53 +6,26 @@ resource "aws_instance" "aws_ubuntu" {
   user_data     = file("configuration.tpl")
 }
 
-# Define the security group parameters
-variable "vpc_id" {
-  description = "ID of the VPC where the security group will be created"
-}
-
-
-variable "security_group_exists" {
-  description = "Indicates whether the security group already exists"
-  default     = false
-}
-
-variable "ingress_rules" {
-  description = "List of ingress rules for the security group"
-  default = [
-    {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-    # Add more rules as needed
-  ]
-}
-
 # Check if the security group already exists
-data "aws_security_group" "existing" {
-  count = var.security_group_exists ? 1 : 0
-
+data "aws_security_group" "existing_security_group" {
   name = var.security_group_name
 }
 
 # Create the security group only if it doesn't exist
-resource "aws_security_group" "new" {
-  count = var.security_group_exists ? 0 : 1
+resource "aws_security_group" "new_security_group" {
+  count = data.aws_security_group.existing_security_group.id == null ? 1 : 0
 
   name        = var.security_group_name
-  description = "My security group description"
-  vpc_id      = var.vpc_id
+  description = var.security_group_description
 
-  // Ingress rules
+  // Add your security group rules here
   ingress {
-    from_port   = var.ingress_rules[0].from_port
-    to_port     = var.ingress_rules[0].to_port
-    protocol    = var.ingress_rules[0].protocol
-    cidr_blocks = var.ingress_rules[0].cidr_blocks
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  // Add more ingress rules as needed
+  // Add more rules as needed
 }
 

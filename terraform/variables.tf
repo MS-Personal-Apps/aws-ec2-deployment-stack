@@ -26,3 +26,7 @@ variable "security_group_name" {
   description = "Name of the security group"
   default     = "demo_sg"
 }
+
+variable "security_group_description" {
+  default = "My Security Group Description"
+}

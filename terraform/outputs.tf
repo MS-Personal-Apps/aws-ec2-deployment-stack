@@ -7,5 +7,5 @@ output "instance_public_dns" {
 }
 
 output "security_group_id" {
-  value = var.security_group_exists ? data.aws_security_group.existing[0].id : aws_security_group.new[0].id
+  value = data.aws_security_group.existing_security_group.id != null ? data.aws_security_group.existing_security_group.id : aws_security_group.new_security_group[0].id
 }

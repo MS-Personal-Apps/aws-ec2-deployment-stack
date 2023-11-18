@@ -17,7 +17,6 @@ resource "aws_security_group" "new" {
 
   name        = var.security_group_name
   description = "My security group description"
-  # vpc_id      = var.vpc_id
 
   // Ingress rules
   ingress {

@@ -6,6 +6,6 @@ output "instance_public_dns" {
   value = aws_instance.aws_ubuntu.public_dns
 }
 
-# output "security_group_id" {
-#   value = aws_security_group.new[count.index].arn
-# }
+output "security_group_id" {
+  value = var.security_group_exists ? data.aws_security_group.existing[0].id : aws_security_group.new[0].id
+}

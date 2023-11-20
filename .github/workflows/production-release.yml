@@ -33,7 +33,6 @@ jobs:
         with:
           workspace: production
           action: apply
-          lambda-version: ${{ inputs.version }}
           working-directory: ./terraform
 
   # update-stack:

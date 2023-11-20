@@ -7,7 +7,7 @@ env:
 jobs:
   test:
     name: Test
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    # if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
 

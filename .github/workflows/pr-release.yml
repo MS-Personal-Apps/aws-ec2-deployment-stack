@@ -30,7 +30,6 @@ jobs:
         with:
           workspace: pr-${{ github.event.pull_request.number }}
           action: apply
-          lambda-version: ${{ github.sha }}
           working-directory: ./terraform
 
 

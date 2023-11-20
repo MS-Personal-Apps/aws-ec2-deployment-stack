@@ -75,7 +75,6 @@ jobs:
         with:
           workspace: development
           action: apply
-          lambda-version: ${{ needs.semantic-release.outputs.version }}
           working-directory: ./terraform
 
   deploy-staging:
@@ -98,7 +97,6 @@ jobs:
         with:
           workspace: staging
           action: apply
-          lambda-version: ${{ needs.semantic-release.outputs.version }}
           working-directory: ./terraform
 
   plan-production:
@@ -121,7 +119,6 @@ jobs:
         with:
           workspace: production
           action: plan
-          lambda-version: ${{ needs.semantic-release.outputs.version }}
           working-directory: ./terraform
 
   # int-test:

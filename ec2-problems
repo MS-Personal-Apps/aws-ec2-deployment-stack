@@ -1,0 +1,6 @@
+php fpm version
+in 20.04 default php is 7.4
+in 22.04 default php is 8.1
+
+output :
+var/log/cloud-init-output.log

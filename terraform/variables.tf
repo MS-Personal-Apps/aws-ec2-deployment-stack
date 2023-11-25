@@ -27,9 +27,8 @@ variable "key_pair_name" {
 variable "security_group_name" {
   type        = string
   description = "Name of the security group"
-  default     = "aligned_around"
+  default     = "aws-ec2-deployment-security"
 }
-
 variable "security_group_description" {
   type    = string
   default = "My Security Group Description"

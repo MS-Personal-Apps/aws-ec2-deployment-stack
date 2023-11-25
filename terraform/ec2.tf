@@ -3,9 +3,9 @@ resource "aws_instance" "aws_ubuntu" {
   ami           = var.instance_ami
   key_name      = var.key_pair_name
 
-  user_data = file("file.sh")
+  user_data = file("setup_nginx_all.sh")
   // subnet
-  subnet_id              = aws_subnet.public_a.id
+  # subnet_id              = aws_subnet.public_a.id
   vpc_security_group_ids = [aws_security_group.new_security_group.id]
   tags = {
     Name = var.instance_name # Specify the desired name for the instance

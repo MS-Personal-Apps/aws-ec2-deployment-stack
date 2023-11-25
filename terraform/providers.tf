@@ -13,7 +13,7 @@ terraform {
 
 provider "aws" {
   profile = var.profile
-  region  = var.region
+  region  = "us-west-1"
   default_tags {
     tags = {
       Repository_name = "aws-ec2-deployment-stack"

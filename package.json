@@ -19,10 +19,7 @@
     "test": "jest --detectOpenHandles --coverage --testPathIgnorePatterns=test/",
     "test:int": "jest --config ./test/jest.config.js",
     "test:int:ci": "jest --config ./test/jest.config.js --ci",
-    "terraform-local-shell": "powershell -File terraform-local.ps1",
-    "terraform-local": "terraform workspace select aws-ec2-deployment-stack-local || terraform workspace new aws-ec2-deployment-stack-local && cd terraform && terraform apply --var-file=./workspaces/local.tfvars --var='profile=' --auto-approve",
-    "terraform-init": "cd terraform && terraform init -reconfigure --backend-config=./backends/local.conf",
-    "terraform-destroy": "cd terraform && terraform destroy --var-file=./workspaces/local.tfvars --var='profile=' --auto-approve"
+    "terraform": "bash terraform_run.sh"
   },
   "repository": {
     "type": "git",

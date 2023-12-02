@@ -39,6 +39,11 @@ sudo ln -s  /usr/share/phpmyadmin /var/www/html/phpmyadmin
 sudo chmod 775 -R /usr/share/phpmyadmin/
 sudo chown root:www-data -R /usr/share/phpmyadmin/
 
+# Make directory
+sudo mkdir /var/www/development
+sudo mkdir /var/www/staging
+sudo mkdir /var/www/production
+
 # Configure Nginx for phpMyAdmin
 sudo chmod -R 777 /etc/nginx/sites-available/
 sudo tee /etc/nginx/sites-available/default <<EOF
@@ -92,6 +97,24 @@ server {
 	location / {
         try_files \$uri \$uri/ /index.html?q=\$uri&\$args;
 	}
+
+	location /development {
+        alias /var/www/html/development;
+        index index.html;
+        try_files \$uri \$uri/ /development/index.html;
+    }
+
+    location /staging {
+        alias /var/www/html/staging;
+        index index.html;
+        try_files \$uri \$uri/ /staging/index.html;
+    }
+
+    location /production {
+        alias /var/www/html/production;
+        index index.html;
+        try_files \$uri \$uri/ /production/index.html;
+    }
 
 	# pass PHP scripts to FastCGI server
 	#

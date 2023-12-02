@@ -5,7 +5,7 @@ sudo apt update -y
 sudo apt install nginx wget unzip -y
 sudo apt install php-fpm php-zip php-json php-mbstring php-mysql -y
 
-MYSQL_ROOT_PASSWORD="JETZ@214365"  # Change this to your desired root password
+MYSQL_ROOT_PASSWORD="Admin@12345"  # Change this to your desired root password
 sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD"
 sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD"
 
@@ -85,7 +85,7 @@ server {
 	root /var/www/html;
 
 	# Add index.php to the list if you are using PHP
-	index index.html index.htm index.nginx-debian.html;
+	index index.php index.html index.htm index.nginx-debian.html;
 
 	server_name _;
 

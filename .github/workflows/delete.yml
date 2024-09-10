@@ -1,33 +1,33 @@
-name: Delete
-on:
-  pull_request:
-    types: [closed]
-env:
-  GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
+# name: Delete
+# on:
+#   pull_request:
+#     types: [closed]
+# env:
+#   GH_PACKAGE_TOKEN: ${{ secrets.GH_PACKAGE_TOKEN }}
 
-permissions:
-  id-token: write
-  contents: read
+# permissions:
+#   id-token: write
+#   contents: read
 
-jobs:
-  delete:
-    name: Delete
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
+# jobs:
+#   delete:
+#     name: Delete
+#     runs-on: ubuntu-latest
+#     timeout-minutes: ${{ fromJSON(vars.WORKFLOW_TIMEOUT_IN_MINUTES) }}
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-      - name: 'Assume AWS role'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+#       - name: 'Assume AWS role'
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 'Remove the stack'
-        uses: ./.github/actions/terraform
-        with:
-          workspace: pr-${{ github.event.pull_request.number }}
-          action: destroy
-          working-directory: ./terraform
+#       - name: 'Remove the stack'
+#         uses: ./.github/actions/terraform
+#         with:
+#           workspace: pr-${{ github.event.pull_request.number }}
+#           action: destroy
+#           working-directory: ./terraform

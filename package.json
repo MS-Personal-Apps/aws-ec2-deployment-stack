@@ -1,7 +1,7 @@
 {
   "name": "aws-ec2-deployment-stack",
   "version": "1.0.0",
-  "description": "",
+  "description": "Creating ec2,vpc and other AWS resources through terraform",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf .build .cache .eslintcache .serverless coverage",

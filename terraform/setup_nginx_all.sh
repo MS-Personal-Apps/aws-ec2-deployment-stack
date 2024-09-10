@@ -40,9 +40,9 @@ sudo chmod 775 -R /usr/share/phpmyadmin/
 sudo chown root:www-data -R /usr/share/phpmyadmin/
 
 # Make directory
-sudo mkdir /var/www/development
-sudo mkdir /var/www/staging
-sudo mkdir /var/www/production
+sudo mkdir /var/www/html/development
+sudo mkdir /var/www/html/staging
+sudo mkdir /var/www/html/production
 
 # Configure Nginx for phpMyAdmin
 sudo chmod -R 777 /etc/nginx/sites-available/
@@ -156,8 +156,46 @@ server {
 #}
 EOF
 
+# Install Docker
+sudo apt-get update -y
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+sudo echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update -y
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Add the current user to the docker group to run docker commands without sudo
+sudo usermod -aG docker $USER
+
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Restart docker
+sudo systemctl restart docker
+
+
+
+# # Install OpenJDK 11 and Jenkins
+# sudo apt-get update -y
+# sudo apt-get install openjdk-11-jdk -y
+# sudo systemctl restart nginx
+# sudo curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee   /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+# sudo echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]   https://pkg.jenkins.io/debian-stable binary/ | sudo tee   /etc/apt/sources.list.d/jenkins.list > /dev/null
+# sudo apt-get update -y
+# sudo apt-get install jenkins -y
+# sudo systemctl start jenkins
+# sudo systemctl status jenkins
+# sudo systemctl enable jenkins
+
 # Test Nginx configuration
-sudo apt update -y
 sudo nginx -t
 
 # Reload Nginx
@@ -166,3 +204,7 @@ sudo systemctl reload nginx
 echo "phpMyAdmin setup completed."
 echo "Username: root"
 echo "Password: $MYSQL_ROOT_PASSWORD"
+
+# Restart the shell to apply group changes
+exec su -l $USER
+

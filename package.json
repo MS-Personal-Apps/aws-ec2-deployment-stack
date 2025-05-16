@@ -1,12 +1,12 @@
 {
-  "name": "test-terraform-github-deploy",
+  "name": "aws-ec2-deployment-stack",
   "version": "1.0.0",
-  "description": "",
+  "description": "Creating ec2,vpc and other AWS resources through terraform",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf .build .cache .eslintcache .serverless coverage",
     "dev": "sls offline start --stage local",
-    "invoke": "sls invoke local -f video-thumbnail-updater -p test/fixtures/sqs-event.json",
+    "invoke": "sls invoke local -f aws-ec2-deployment-stack -p test/fixtures/sqs-event.json",
     "fix": "npm run fix:ts && npm run fix:misc",
     "format": "prettier --write \"**/*.{ts,js,json,md,yml}\"",
     "lint": "npm run lint:ts && npm run lint:package && npm run lint:pretty",
@@ -18,11 +18,12 @@
     "start": "sls offline start",
     "test": "jest --detectOpenHandles --coverage --testPathIgnorePatterns=test/",
     "test:int": "jest --config ./test/jest.config.js",
-    "test:int:ci": "jest --config ./test/jest.config.js --ci"
+    "test:int:ci": "jest --config ./test/jest.config.js --ci",
+    "terraform": "bash terraform_run.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com-personal:shanrijo/test-terraform-github-deploy.git"
+    "url": "git@github.com-personal:shanrijo/aws-ec2-deployment-stack.git"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

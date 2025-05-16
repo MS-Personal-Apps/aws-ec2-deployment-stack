@@ -15,9 +15,21 @@ variable "instance_ami" {
 variable "instance_type" {
   default = "t2.micro"
   type    = string
-
+}
+variable "instance_name" {
+  default = "aws-ec2-deployment-terraform"
+  type    = string
 }
 variable "key_pair_name" {
   type    = string
   default = "test-terraform-github-deploy"
+}
+variable "security_group_name" {
+  type        = string
+  description = "Name of the security group"
+  default     = "aws-ec2-deployment-security"
+}
+variable "security_group_description" {
+  type    = string
+  default = "My Security Group Description"
 }
